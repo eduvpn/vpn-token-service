@@ -1,0 +1,31 @@
+{
+    "authors": [
+        {
+            "email": "fkooman@tuxed.net",
+            "name": "Fran\u00e7ois Kooman"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SURFnet\\VPN\\Token\\": "src/"
+        }
+    },
+    "description": "VPN Token Server",
+    "license": "AGPL-3.0",
+    "name": "eduvpn/vpn-token-server",
+    "repositories": [
+        {
+            "no-api": true,
+            "type": "vcs",
+            "url": "https://github.com/fkooman/php-oauth2-server"
+        }
+    ],
+    "require": {
+        "ext-date": "*",
+        "ext-json": "*",
+        "ext-libsodium": "*",
+        "ext-pdo": "*",
+        "fkooman/oauth2-server": "dev-master",
+        "php": ">= 5.4.0"
+    }
+}

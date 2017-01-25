@@ -1,0 +1,13 @@
+<?php
+
+return [
+    'signatureKeyPair' => 'jq7s7JVBhXk02Nn0Hng4+BNcUlwYOPRR9IXngC51XQDYvQHEgaAvFVHewDvRHtTD5uuVk4cfBbKqT10ckGCJ2Ni9AcSBoC8VUd7AO9Ee1MPm65WThx8FsqpPXRyQYInY',
+    'clientList' => [
+        'demo_client' => [
+            'redirect_uri' => 'http://localhost:8081/callback.php',
+            'response_type' => 'code',
+            'display_name' => 'Demo Client',
+            'client_secret' => 'demo_secret',
+        ],
+    ],
+];
