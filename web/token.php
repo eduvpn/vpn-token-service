@@ -81,5 +81,7 @@ try {
 } catch (Exception $e) {
     http_response_code(500);
     header('Content-Type: application/json');
+    header('Cache-Control: no-store');
+    header('Pragma: no-cache');
     echo json_encode(['error' => 'server_error', 'error_description' => $e->getMessage()]);
 }
