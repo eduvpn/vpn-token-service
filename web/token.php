@@ -69,6 +69,7 @@ try {
             header('Content-Type: application/json');
             header('Cache-Control: no-store');
             header('Pragma: no-cache');
+            header('Allow: POST');
             echo json_encode(['error' => 'invalid_request', 'error_description' => 'Method Not Allowed']);
             break;
     }

@@ -70,6 +70,15 @@ try {
             break;
         default:
             http_response_code(405);
+            header('Allow: GET,POST');
+            echo $templateManager->render(
+                'error',
+                [
+                    'errorCode' => 405,
+                    'errorMessage' => 'Method Not Allowed',
+                    'errorDescription' => '',
+                ]
+            );
             break;
     }
 } catch (OAuthException $e) {
