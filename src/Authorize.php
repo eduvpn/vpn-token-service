@@ -55,11 +55,26 @@ class Authorize
             }
 
             if ('POST' === $request->getMethod()) {
+                if (false === self::isCSRF($request)) {
+                    return new AuthorizeResponse(
+                        302,
+                        [
+                            'Location' => $this->server->postAuthorize($request->getQueryParameters(), $request->getPostParameters(), $userId),
+                        ]
+                    );
+                }
+
                 return new AuthorizeResponse(
-                    302,
-                    [
-                        'Location' => $this->server->postAuthorize($request->getQueryParameters(), $request->getPostParameters(), $userId),
-                    ]
+                    400,
+                    [],
+                    $this->tpl->render(
+                        'error',
+                        [
+                            'errorCode' => 400,
+                            'errorMessage' => 'CSRF protection triggered',
+                            'errorDescription' => '',
+                        ]
+                    )
                 );
             }
 
@@ -91,5 +106,41 @@ class Authorize
                 )
             );
         }
+    }
+
+    private static function isCSRF(Request $request)
+    {
+        $uriAuthority = $request->getAuthority();
+        $httpOrigin = $request->getHeader('HTTP_ORIGIN');
+        if (!is_null($httpOrigin)) {
+            return self::verifyOrigin($uriAuthority, $httpOrigin);
+        }
+
+        $httpReferrer = $request->getHeader('HTTP_REFERER');
+        if (!is_null($httpReferrer)) {
+            return self::verifyReferrer($uriAuthority, $httpReferrer);
+        }
+
+        return true;
+    }
+
+    private static function verifyOrigin($uriAuthority, $httpOrigin)
+    {
+        // the HTTP_ORIGIN MUST be equal to uriAuthority
+        if ($uriAuthority !== $httpOrigin) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static function verifyReferrer($uriAuthority, $httpReferrer)
+    {
+        // the HTTP_REFERER MUST start with uriAuthority
+        if (0 !== strpos($httpReferrer, sprintf('%s/', $uriAuthority))) {
+            return true;
+        }
+
+        return false;
     }
 }

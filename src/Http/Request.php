@@ -70,7 +70,7 @@ class Request
      */
     public function getAuthUser()
     {
-        return array_key_exists('PHP_AUTH_USER', $this->serverData) ? $this->serverData['PHP_AUTH_USER'] : null;
+        return $this->getHeader('PHP_AUTH_USER');
     }
 
     /**
@@ -78,6 +78,47 @@ class Request
      */
     public function getAuthPass()
     {
-        return array_key_exists('PHP_AUTH_PW', $this->serverData) ? $this->serverData['PHP_AUTH_PW'] : null;
+        return $this->getHeader('PHP_AUTH_PW');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHeader($key)
+    {
+        return array_key_exists($key, $this->serverData) ? $this->serverData[$key] : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthority()
+    {
+        // scheme
+        if (!array_key_exists('REQUEST_SCHEME', $this->serverData)) {
+            $requestScheme = 'http';
+        } else {
+            $requestScheme = $this->serverData['REQUEST_SCHEME'];
+        }
+
+        // server_name
+        $serverName = $this->serverData['SERVER_NAME'];
+
+        // port
+        $serverPort = (int) $this->serverData['SERVER_PORT'];
+
+        $usePort = false;
+        if ('https' === $requestScheme && 443 !== $serverPort) {
+            $usePort = true;
+        }
+        if ('http' === $requestScheme && 80 !== $serverPort) {
+            $usePort = true;
+        }
+
+        if ($usePort) {
+            return sprintf('%s://%s:%d', $requestScheme, $serverName, $serverPort);
+        }
+
+        return sprintf('%s://%s', $requestScheme, $serverName);
     }
 }
