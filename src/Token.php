@@ -20,6 +20,8 @@ namespace SURFnet\VPN\Token;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
+use SURFnet\VPN\Token\Http\Request;
+use SURFnet\VPN\Token\Http\TokenResponse;
 
 class Token
 {
@@ -32,41 +34,30 @@ class Token
     }
 
     /**
-     * @return Response
+     * @return TokenResponse
      */
-    public function run(array $serverData, array $getData, array $postData)
+    public function run(Request $request)
     {
         try {
-            if ('POST' !== $serverData['REQUEST_METHOD']) {
-                return new JsonResponse(
-                    405,
-                    [
-                        'Cache-Control' => ['no-store'],
-                        'Pragma' => ['no-cache'],
-                        'Allow' => ['POST'],
-                    ],
-                    ['error' => 'invalid_request', 'error_description' => 'Method Not Allowed']
+            if ('POST' === $request->getMethod()) {
+                return new TokenResponse(
+                    200,
+                    [],
+                    $this->server->postToken($request->getPostParameters(), $request->getAuthUser(), $request->getAuthPass())
                 );
             }
 
-            $authUser = array_key_exists('PHP_AUTH_USER', $serverData) ? $serverData['PHP_AUTH_USER'] : null;
-            $authPass = array_key_exists('PHP_AUTH_PW', $serverData) ? $serverData['PHP_AUTH_PW'] : null;
-
-            return new JsonResponse(
-                200,
+            return new TokenResponse(
+                405,
                 [
-                    'Cache-Control' => ['no-store'],
-                    'Pragma' => ['no-cache'],
+                    'Allow' => 'POST',
                 ],
-                $this->server->postToken($postData, $authUser, $authPass)
+                ['error' => 'invalid_request', 'error_description' => 'Method Not Allowed']
             );
         } catch (OAuthException $e) {
-            $response = new JsonResponse(
+            $response = new TokenResponse(
                 $e->getCode(),
-                [
-                    'Cache-Control' => ['no-store'],
-                    'Pragma' => ['no-cache'],
-                ],
+                [],
                 ['error' => $e->getMessage(), 'error_description' => $e->getDescription()]
             );
             if (401 === $e->getCode()) {

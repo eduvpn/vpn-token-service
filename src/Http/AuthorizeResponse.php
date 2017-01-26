@@ -16,16 +16,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Token;
+namespace SURFnet\VPN\Token\Http;
 
-class JsonResponse extends Response
+class AuthorizeResponse extends Response
 {
-    public function __construct($statusCode = 200, array $headers = [], $body = [])
+    public function __construct($statusCode = 200, array $headers = [], $body = '')
     {
         parent::__construct(
             $statusCode,
-            array_merge_recursive($headers, ['Content-Type' => ['application/json']]),
-            json_encode($body)
+            array_merge_recursive(
+                $headers,
+                [
+                    'Content-Type' => 'text/html',
+                ]
+            ),
+            $body
         );
     }
 }

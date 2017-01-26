@@ -20,7 +20,8 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
-use SURFnet\VPN\Token\JsonResponse;
+use SURFnet\VPN\Token\Http\Request;
+use SURFnet\VPN\Token\Http\TokenResponse;
 use SURFnet\VPN\Token\Token;
 
 try {
@@ -49,14 +50,11 @@ try {
     $oauthServer->setSignatureKeyPair(base64_decode($configData['signatureKeyPair']));
 
     $token = new Token($oauthServer);
-    $token->run($_SERVER, $_GET, $_POST)->send();
+    $token->run(new Request($_SERVER, $_GET, $_POST))->send();
 } catch (Exception $e) {
-    $response = new JsonResponse(
+    $response = new TokenResponse(
         500,
-        [
-            'Cache-Control' => ['no-store'],
-            'Pragma' => ['no-cache'],
-        ],
+        [],
         ['error' => 'server_error', 'error_description' => $e->getMessage()]
     );
     $response->send();

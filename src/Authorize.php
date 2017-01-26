@@ -20,6 +20,8 @@ namespace SURFnet\VPN\Token;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
+use SURFnet\VPN\Token\Http\AuthorizeResponse;
+use SURFnet\VPN\Token\Http\Request;
 
 class Authorize
 {
@@ -36,46 +38,47 @@ class Authorize
     }
 
     /**
-     * @return Response
+     * @return AuthorizeResponse
      */
-    public function run(array $serverData, array $getData, array $postData, $userId)
+    public function run(Request $request, $userId)
     {
         try {
-            switch ($serverData['REQUEST_METHOD']) {
-                case 'GET':
-                    return new Response(
-                        200,
-                        [],
-                        $this->tpl->render(
-                            'page',
-                            $this->server->getAuthorize($getData)
-                        )
-                    );
-                case 'POST':
-                    return new Response(
-                        302,
-                        [
-                            'Location' => [$this->server->postAuthorize($getData, $postData, $userId)],
-                        ]
-                    );
-                default:
-                    return new Response(
-                        405,
-                        [
-                            'Allow' => ['GET,POST'],
-                        ],
-                        $this->tpl->render(
-                            'error',
-                            [
-                                'errorCode' => 405,
-                                'errorMessage' => 'Method Not Allowed',
-                                'errorDescription' => '',
-                            ]
-                        )
-                    );
+            if ('GET' === $request->getMethod()) {
+                return new AuthorizeResponse(
+                    200,
+                    [],
+                    $this->tpl->render(
+                        'page',
+                        $this->server->getAuthorize($request->getQueryParameters())
+                    )
+                );
             }
+
+            if ('POST' === $request->getMethod()) {
+                return new AuthorizeResponse(
+                    302,
+                    [
+                        'Location' => $this->server->postAuthorize($request->getQueryParameters(), $request->getPostParameters(), $userId),
+                    ]
+                );
+            }
+
+            return new AuthorizeResponse(
+                405,
+                [
+                    'Allow' => 'GET,POST',
+                ],
+                $this->tpl->render(
+                    'error',
+                    [
+                        'errorCode' => 405,
+                        'errorMessage' => 'Method Not Allowed',
+                        'errorDescription' => '',
+                    ]
+                )
+            );
         } catch (OAuthException $e) {
-            return new Response(
+            return new AuthorizeResponse(
                 $e->getCode(),
                 [],
                 $this->tpl->render(

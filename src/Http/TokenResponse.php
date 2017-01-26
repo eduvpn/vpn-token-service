@@ -1,7 +1,6 @@
-#!/usr/bin/env php
 <?php
 /**
- *  Copyright (C) 2017 SURFnet.
+ *  Copyright (C) 2017 François Kooman <fkooman@tuxed.net>.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -16,9 +15,24 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\OAuth\Server\TokenStorage;
+namespace SURFnet\VPN\Token\Http;
 
-$tokenStorage = new TokenStorage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
-$tokenStorage->init();
+class TokenResponse extends Response
+{
+    public function __construct($statusCode = 200, array $headers = [], $body = [])
+    {
+        parent::__construct(
+            $statusCode,
+            array_merge_recursive(
+                $headers,
+                [
+                    'Content-Type' => 'application/json',
+                    'Cache-Control' => 'no-store',
+                    'Pragma' => 'no-cache',
+                ]
+            ),
+            json_encode($body)
+        );
+    }
+}

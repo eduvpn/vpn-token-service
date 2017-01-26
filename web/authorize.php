@@ -21,7 +21,8 @@ use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Token\Authorize;
-use SURFnet\VPN\Token\Response;
+use SURFnet\VPN\Token\Http\AuthorizeResponse;
+use SURFnet\VPN\Token\Http\Request;
 use SURFnet\VPN\Token\Template;
 
 $tpl = new Template(sprintf('%s/templates', dirname(__DIR__)));
@@ -55,9 +56,9 @@ try {
     $userId = 'foo';
 
     $authorize = new Authorize($oauthServer, $tpl);
-    $authorize->run($_SERVER, $_GET, $_POST, $userId)->send();
+    $authorize->run(new Request($_SERVER, $_GET, $_POST), $userId)->send();
 } catch (Exception $e) {
-    $response = new Response(
+    $response = new AuthorizeResponse(
         500,
         [],
         $tpl->render(
