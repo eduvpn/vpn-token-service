@@ -24,7 +24,7 @@ class AuthorizeResponse extends Response
     {
         parent::__construct(
             $statusCode,
-            array_merge_recursive(
+            array_merge(
                 $headers,
                 [
                     'Content-Type' => 'text/html',
