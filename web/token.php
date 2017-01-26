@@ -17,17 +17,15 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
+use SURFnet\VPN\Token\JsonResponse;
+use SURFnet\VPN\Token\Token;
 
 try {
     $configData = require sprintf('%s/config/config.php', dirname(__DIR__));
-
-    // storage
     $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
-    $tokenStorage->init();
 
     // client "database"
     $getClientInfo = function ($clientId) use ($configData) {
@@ -48,42 +46,18 @@ try {
         new DateTime(),
         $getClientInfo
     );
-
     $oauthServer->setSignatureKeyPair(base64_decode($configData['signatureKeyPair']));
 
-    switch ($_SERVER['REQUEST_METHOD']) {
-        case 'POST':
-            $authUser = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : null;
-            $authPass = array_key_exists('PHP_AUTH_PW', $_SERVER) ? $_SERVER['PHP_AUTH_PW'] : null;
-
-            http_response_code(200);
-            header('Content-Type: application/json');
-            header('Cache-Control: no-store');
-            header('Pragma: no-cache');
-            echo json_encode($oauthServer->postToken($_POST, $authUser, $authPass));
-            break;
-        default:
-            http_response_code(405);
-            header('Content-Type: application/json');
-            header('Cache-Control: no-store');
-            header('Pragma: no-cache');
-            header('Allow: POST');
-            echo json_encode(['error' => 'invalid_request', 'error_description' => 'Method Not Allowed']);
-            break;
-    }
-} catch (OAuthException $e) {
-    http_response_code($e->getCode());
-    header('Content-Type: application/json');
-    header('Cache-Control: no-store');
-    header('Pragma: no-cache');
-    if (401 === $e->getCode()) {
-        header('WWW-Authenticate: Basic realm="OAuth');
-    }
-    echo json_encode(['error' => $e->getMessage(), 'error_description' => $e->getDescription()]);
+    $token = new Token($oauthServer);
+    $token->run($_SERVER, $_GET, $_POST)->send();
 } catch (Exception $e) {
-    http_response_code(500);
-    header('Content-Type: application/json');
-    header('Cache-Control: no-store');
-    header('Pragma: no-cache');
-    echo json_encode(['error' => 'server_error', 'error_description' => $e->getMessage()]);
+    $response = new JsonResponse(
+        500,
+        [
+            'Cache-Control' => ['no-store'],
+            'Pragma' => ['no-cache'],
+        ],
+        ['error' => 'server_error', 'error_description' => $e->getMessage()]
+    );
+    $response->send();
 }

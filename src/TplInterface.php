@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (C) 2017 SURFnet.
+ *  Copyright (C) 2016 SURFnet.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -18,15 +18,8 @@
 
 namespace SURFnet\VPN\Token;
 
-class Template implements TplInterface
+interface TplInterface
 {
-    private $templateDir;
-
-    public function __construct($templateDir)
-    {
-        $this->templateDir = $templateDir;
-    }
-
     /**
      * Render the template.
      *
@@ -36,21 +29,5 @@ class Template implements TplInterface
      *
      * @return string the rendered template
      */
-    public function render($templateName, array $templateVariables)
-    {
-        $templateFile = sprintf('%s/%s.php', $this->templateDir, $templateName);
-        $templateData = require $templateFile;
-        $templateKeys = array_keys($templateVariables);
-        $templateValues = array_values($templateVariables);
-        $preparedTemplateKeys = [];
-        foreach ($templateKeys as $templateKey) {
-            $preparedTemplateKeys[] = sprintf('{{ %s }}', $templateKey);
-        }
-        $preparedTemplateValues = [];
-        foreach ($templateValues as $templateValue) {
-            $preparedTemplateValues[] = htmlspecialchars((string) $templateValue, ENT_QUOTES, 'UTF-8');
-        }
-
-        return str_replace($preparedTemplateKeys, $preparedTemplateValues, $templateData);
-    }
+    public function render($templateName, array $templateVariables);
 }

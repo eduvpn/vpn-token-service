@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  *  Copyright (C) 2017 SURFnet.
@@ -15,22 +16,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-return <<< 'EOF'
-<!DOCTYPE html>
+require_once 'vendor/autoload.php';
 
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1">
-    <title>Error</title>
-    <link rel="stylesheet" type="text/css" href="css/screen.css">
-</head>
-<body>
-    <h1>Error</h1>
-    <h2>{{ errorCode }}</h2>
-    <p>
-        <strong>{{ errorMessage }}</strong> ({{ errorDescription }})
-    </p>
-</body>
-</html>
-EOF;
+use fkooman\OAuth\Server\TokenStorage;
+
+$tokenStorage = new TokenStorage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
+$tokenStorage->init();
