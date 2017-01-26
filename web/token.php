@@ -49,8 +49,6 @@ try {
         $getClientInfo
     );
 
-    $userId = 'foo';
-
     $oauthServer->setSignatureKeyPair(base64_decode($configData['signatureKeyPair']));
 
     switch ($_SERVER['REQUEST_METHOD']) {
@@ -78,6 +76,9 @@ try {
     header('Content-Type: application/json');
     header('Cache-Control: no-store');
     header('Pragma: no-cache');
+    if (401 === $e->getCode()) {
+        header('WWW-Authenticate: Basic realm="OAuth');
+    }
     echo json_encode(['error' => $e->getMessage(), 'error_description' => $e->getDescription()]);
 } catch (Exception $e) {
     http_response_code(500);
