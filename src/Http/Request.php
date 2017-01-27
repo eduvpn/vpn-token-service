@@ -94,28 +94,10 @@ class Request
      */
     public function getAuthority()
     {
-        // scheme
-        if (!array_key_exists('REQUEST_SCHEME', $this->serverData)) {
-            $requestScheme = 'http';
-        } else {
-            $requestScheme = $this->serverData['REQUEST_SCHEME'];
-        }
-
-        // server_name
+        $requestScheme = array_key_exists('REQUEST_SCHEME', $this->serverData) ? $this->serverData['REQUEST_SCHEME'] : 'http';
         $serverName = $this->serverData['SERVER_NAME'];
-
-        // port
         $serverPort = (int) $this->serverData['SERVER_PORT'];
-
-        $usePort = false;
-        if ('https' === $requestScheme && 443 !== $serverPort) {
-            $usePort = true;
-        }
-        if ('http' === $requestScheme && 80 !== $serverPort) {
-            $usePort = true;
-        }
-
-        if ($usePort) {
+        if (('https' === $requestScheme && 443 !== $serverPort) || ('http' === $requestScheme && 80 !== $serverPort)) {
             return sprintf('%s://%s:%d', $requestScheme, $serverName, $serverPort);
         }
 
