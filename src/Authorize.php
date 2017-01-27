@@ -111,36 +111,18 @@ class Authorize
     private static function isCSRF(Request $request)
     {
         $uriAuthority = $request->getAuthority();
-        $httpOrigin = $request->getHeader('HTTP_ORIGIN');
-        if (!is_null($httpOrigin)) {
-            return self::verifyOrigin($uriAuthority, $httpOrigin);
+        if (null !== $httpOrigin = $request->getHeader('HTTP_ORIGIN')) {
+            if ($uriAuthority === $httpOrigin) {
+                return false;
+            }
         }
 
-        $httpReferrer = $request->getHeader('HTTP_REFERER');
-        if (!is_null($httpReferrer)) {
-            return self::verifyReferrer($uriAuthority, $httpReferrer);
+        if (null !== $httpReferrer = $request->getHeader('HTTP_REFERER')) {
+            if (0 === strpos($httpReferrer, sprintf('%s/', $uriAuthority))) {
+                return false;
+            }
         }
 
         return true;
-    }
-
-    private static function verifyOrigin($uriAuthority, $httpOrigin)
-    {
-        // the HTTP_ORIGIN MUST be equal to uriAuthority
-        if ($uriAuthority !== $httpOrigin) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private static function verifyReferrer($uriAuthority, $httpReferrer)
-    {
-        // the HTTP_REFERER MUST start with uriAuthority
-        if (0 !== strpos($httpReferrer, sprintf('%s/', $uriAuthority))) {
-            return true;
-        }
-
-        return false;
     }
 }
