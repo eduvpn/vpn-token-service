@@ -10,9 +10,9 @@
             "SURFnet\\VPN\\Token\\": "src/"
         }
     },
-    "description": "VPN Token Server",
+    "description": "VPN Token Servie",
     "license": "AGPL-3.0",
-    "name": "eduvpn/vpn-token-server",
+    "name": "eduvpn/vpn-token-service",
     "repositories": [
         {
             "no-api": true,
