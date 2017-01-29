@@ -52,8 +52,15 @@ try {
     );
     $oauthServer->setSignatureKeyPair(base64_decode($configData['signatureKeyPair']));
 
-    // XXX take this from $_SERVER variable
-    $userId = 'foo';
+    if (!array_key_exists('userIdAttribute', $configData)) {
+        throw new RuntimeException('"userIdAttribute" not set in configuration file');
+    }
+
+    if (!array_key_exists($configData['userIdAttribute'], $_SERVER)) {
+        throw new RuntimeException('"userIdAttribute" not available as a server variable');
+    }
+
+    $userId = $_SERVER[$configData['userIdAttribute']];
 
     $authorize = new Authorize($oauthServer, $tpl);
     $authorize->run(new Request($_SERVER, $_GET, $_POST), $userId)->send();

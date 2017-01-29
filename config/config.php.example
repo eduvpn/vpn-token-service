@@ -1,7 +1,14 @@
 <?php
 
 return [
+    // the attribute to use to determine the user ID, e.g. for mod_auth_mellon
+    'userIdAttribute' => 'MELLON_NAME_ID',
+
+    // the signature keypair used for signing access tokens, generate your own
+    // with vpn-token-service-generate-keypair (or bin/generate-keypair.php)
     'signatureKeyPair' => 'jq7s7JVBhXk02Nn0Hng4+BNcUlwYOPRR9IXngC51XQDYvQHEgaAvFVHewDvRHtTD5uuVk4cfBbKqT10ckGCJ2Ni9AcSBoC8VUd7AO9Ee1MPm65WThx8FsqpPXRyQYInY',
+
+    // list of all OAuth clients registered to obtain access tokens
     'clientList' => [
         'demo_client' => [
             'redirect_uri' => 'http://localhost:8081/callback.php',
