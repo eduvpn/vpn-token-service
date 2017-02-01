@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "025924fda17769629ea4ca09c0636505c505a457"
+                "reference": "a3476c7880e7f087adf1b36e83362d0dd619bb6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/025924fda17769629ea4ca09c0636505c505a457",
-                "reference": "025924fda17769629ea4ca09c0636505c505a457",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/a3476c7880e7f087adf1b36e83362d0dd619bb6a",
+                "reference": "a3476c7880e7f087adf1b36e83362d0dd619bb6a",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-01-31 14:00:07"
+            "time": "2017-02-01 08:08:04"
         }
     ],
     "packages-dev": [],
