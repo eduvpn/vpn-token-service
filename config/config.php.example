@@ -1,6 +1,9 @@
 <?php
 
 return [
+    // enable Twig template cache
+    'enableTemplateCache' => true,
+
     // the attribute to use to determine the user ID, e.g. for mod_auth_mellon
     'userIdAttribute' => 'MELLON_NAME_ID',
 
