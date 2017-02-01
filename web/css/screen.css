@@ -1,40 +1,158 @@
 body {
     font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;
+    font-size: 90%;
     max-width: 55em;
-    margin:0 auto;
-    color: #333;
+    margin: 0 auto;
+    color: #555;
     line-height: 1.4;
-    font-size: 1em;
+    padding: 0.3em;
+    text-align: justify;
 }
 
-code, pre {
-    font-size: 1.2em;
-    font-family: monospace;
+h1 {
+    display: none;
 }
 
-table {
-    width: 100%;
-    border: 1px solid #666;
+a {
+    color: #222;
 }
 
-th, td {
-    text-align: left;
-    padding: 0.5em;
+dt {
+    margin: 0.5em 0;
+    font-weight: bold;
+}
+
+.text-right {
+    text-align: right;
 }
 
 fieldset {
-    text-align: center;
     border: 0;
+    margin: 0;
+    padding: 0;
 }
 
-button {
-    margin: 0.5em;
+fieldset textarea {
+    width: 100%;
 }
 
-button.approve {
-    color: #080;
+fieldset button {
+    margin-top: 1em;
 }
 
-button.reject {
-    color: #800;
+p.success, p.success a, span.success, span.success a {
+    background-color: #008000;
+    border: 1px solid #007000;
+    color: #fff;
+}
+
+p.warning, p.warning a, span.warning, span.warning a {
+    background-color: #ff8c00;
+    border: 1px solid #ef7c00;
+    color: #fff;
+}
+
+p.error, p.error a, span.error, span.error a {
+    background-color: #dc143c;
+    border: 1px solid #cc042c;
+    color: #fff;
+}
+
+p.plain, p.plain a, span.plain, span.plain a {
+    background-color: #f4f4f4;
+    border: 1px solid #e4e4e4;
+    color: #000;
+}
+
+p.plain, p.success, p.warning, p.error, span.plain, span.success, span.warning, span.error {
+    border-radius: 0.5em;
+}
+
+span.plain, span.success, span.warning, span.error {
+    padding: 0.3em 0.5em;
+    font-weight: bold;
+    font-size: 85%;
+}
+
+p.plain, p.success, p.warning, p.error {
+    padding: 1em;
+}
+
+ul.simple {
+    padding: 0 1em;
+    margin: 0;
+}
+
+ul.menu {
+    margin-bottom: 2em;
+    padding: 0;
+}
+
+ul.menu li {
+    display: inline;
+    font-weight: bold;
+}
+
+ul.menu li.active a {
+    color: #fff;
+    background-color: #555;
+    border-radius: 0.5em;
+
+}
+
+ul.menu li a {
+    display: inline-block;
+    padding: 0.7em;
+    text-decoration: none;
+    color: #555;
+}
+
+table {
+    border: 1px solid #ccc;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr {
+    background-color: #eee;
+    color: #555;
+}
+
+tbody th {
+    vertical-align: top;
+}
+
+td, th {
+    padding: 0.8em 0.5em;
+}
+
+tbody tr:nth-child(even) {
+   background-color: #f4f4f4;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin: 0.7em 0 0.3em 0;
+}
+
+hr {
+    display: none;
+}
+
+div.footer {
+    margin-top: 2em;
+    text-align: center;
+}
+
+div.footer form {
+    display: inline;
+}
+
+div.footer button {
+    border: 0;
+    background-color: #fff;
+    color: #888;
+    text-decoration: underline;
+    cursor: pointer;
 }

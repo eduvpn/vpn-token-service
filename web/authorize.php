@@ -22,15 +22,24 @@ use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Token\Authorize;
 use SURFnet\VPN\Token\Config;
-use SURFnet\VPN\Token\Http\AuthorizeResponse;
 use SURFnet\VPN\Token\Http\Request;
-use SURFnet\VPN\Token\Template;
-
-$tpl = new Template(sprintf('%s/templates', dirname(__DIR__)));
+use SURFnet\VPN\Token\TwigTpl;
 
 try {
     $config = new Config(require sprintf('%s/config/config.php', dirname(__DIR__)));
     $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
+
+    $templateDirs = [
+        sprintf('%s/views', dirname(__DIR__)),
+        sprintf('%s/config/views', dirname(__DIR__)),
+    ];
+
+    $dataDir = sprintf('%s/data', dirname(__DIR__));
+    $templateCache = null;
+    if ($config->enableTemplateCache) {
+        $templateCache = sprintf('%s/tpl', $dataDir);
+    }
+    $tpl = new TwigTpl($templateDirs, $templateCache);
 
     // client "database"
     $getClientInfo = function ($clientId) use ($config) {
@@ -66,17 +75,5 @@ try {
     $authorize = new Authorize($oauthServer, $tpl);
     $authorize->run(new Request($_SERVER, $_GET, $_POST), $userId)->send();
 } catch (Exception $e) {
-    $response = new AuthorizeResponse(
-        500,
-        [],
-        $tpl->render(
-            'error',
-            [
-                'errorCode' => 500,
-                'errorMessage' => 'Internal Server Error',
-                'errorDescription' => $e->getMessage(),
-            ]
-        )
-    );
-    $response->send();
+    echo $e->getMessage();
 }

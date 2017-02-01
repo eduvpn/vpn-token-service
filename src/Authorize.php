@@ -48,7 +48,7 @@ class Authorize
                     200,
                     [],
                     $this->tpl->render(
-                        'page',
+                        'authorize',
                         $this->server->getAuthorize($request->getQueryParameters())
                     )
                 );

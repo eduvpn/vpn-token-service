@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="menu">
+        <li class="active"><a href="#">Approval</a>
+    </ul>
+
+    <p>An application wants to act on your behalf.</p>
+
+    <dl>
+        <dt>Application</dt><dd><span title="{{ client_id }}">{{ display_name }}</span></dd>
+        <dt>Permissions</dt><dd>{{ scope }}</dd>
+    </dl>
+
+    <form method="post">
+        <button class="error" type="submit" name="approve" value="no">Reject</button>
+        <button class="success" type="submit" name="approve" value="yes">Approve</button>
+    </form>
+
+    {% include 'footer.twig' %}
+</body>
+</html>

@@ -26,6 +26,7 @@
         "ext-libsodium": "*",
         "ext-pdo": "*",
         "fkooman/oauth2-server": "dev-master",
-        "php": ">= 5.4.0"
+        "php": ">= 5.4.0",
+        "twig/twig": "^1.0"
     }
 }
