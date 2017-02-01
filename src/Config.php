@@ -45,4 +45,9 @@ class Config
 
         return $this->data[$key];
     }
+
+    public function toArray()
+    {
+        return $this->data;
+    }
 }

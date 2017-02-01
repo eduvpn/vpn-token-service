@@ -27,15 +27,19 @@ return <<< 'EOF'
 </head>
 <body>
     <h1>Authorize</h1>
+    <p>
+You can authorize the application below to manage your VPN configurations! If you
+do NOT recognize the application, do NOT click "Approve".
+    </p>
     <table>
-        <tr><th>Client ID</th><td><span title="{{ client_id }}">{{ display_name }}</span></td></tr>
-        <tr><th>Redirect URI</th><td>{{ redirect_uri }}</td></tr>
-        <tr><th>Scope</th><td>{{ scope }}</td></tr>
+        <tr><th>Application</th><td><span title="{{ client_id }}">{{ display_name }}</span></td></tr>
+        <tr><th>Redirect URI</th><td><code>{{ redirect_uri }}</code></td></tr>
+        <tr><th>Permissions</th><td><code>{{ scope }}</code></td></tr>
     </table>
     <form method="post">
         <fieldset>
-            <button type="submit" name="approve" value="yes">Approve</button>
-            <button type="submit" name="approve" value="no">Reject</button>
+            <button class="reject" type="submit" name="approve" value="no">Reject</button>
+            <button class="approve" type="submit" name="approve" value="yes">Approve</button>
         </fieldset>
     </form>
 </body>
