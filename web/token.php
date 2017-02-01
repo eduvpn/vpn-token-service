@@ -38,7 +38,7 @@ try {
             return false;
         }
 
-        return $config->clientList->$clientId;
+        return $config->clientList->$clientId->toArray();
     };
 
     // server
