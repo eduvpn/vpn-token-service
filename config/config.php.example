@@ -5,16 +5,27 @@ return [
     'userIdAttribute' => 'MELLON_NAME_ID',
 
     // the signature keypair used for signing access tokens, generate your own
-    // with vpn-token-service-generate-keypair (or bin/generate-keypair.php)
-    'signatureKeyPair' => 'jq7s7JVBhXk02Nn0Hng4+BNcUlwYOPRR9IXngC51XQDYvQHEgaAvFVHewDvRHtTD5uuVk4cfBbKqT10ckGCJ2Ni9AcSBoC8VUd7AO9Ee1MPm65WThx8FsqpPXRyQYInY',
+    // with vpn-token-service-generate-keypair (or php bin/generate-keypair.php)
+    'signatureKeyPair' => '',
 
     // list of all OAuth clients registered to obtain access tokens
     'clientList' => [
-        'demo_client' => [
-            'redirect_uri' => 'http://localhost:8081/callback.php',
-            'response_type' => 'code',
-            'display_name' => 'Demo Client',
-            'client_secret' => 'demo_secret',
+        // API 1 Apps
+        'nl.eduvpn.app' => [
+            'redirect_uri' => 'nl.eduvpn.app://import/callback',
+            'response_type' => 'token',
+            'display_name' => 'eduVPN for Android',
         ],
+        // API 2 Apps
+        //'nl.eduvpn.app.android' => [
+        //    'redirect_uri' => 'nl.eduvpn.app.android://api/callback',
+        //    'response_type' => 'code',
+        //    'display_name' => 'eduVPN for Android',
+        //],
+        //'nl.eduvpn.app.windows' => [
+        //    'redirect_uri' => 'nl.eduvpn.app.windows://api/callback',
+        //    'response_type' => 'code',
+        //    'display_name' => 'eduVPN for Windows',
+        //],
     ],
 ];
