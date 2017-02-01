@@ -20,24 +20,25 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
+use SURFnet\VPN\Token\Config;
 use SURFnet\VPN\Token\Http\Request;
 use SURFnet\VPN\Token\Http\TokenResponse;
 use SURFnet\VPN\Token\Token;
 
 try {
-    $configData = require sprintf('%s/config/config.php', dirname(__DIR__));
+    $config = new Config(require sprintf('%s/config/config.php', dirname(__DIR__)));
     $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
 
     // client "database"
-    $getClientInfo = function ($clientId) use ($configData) {
-        if (!array_key_exists('clientList', $configData)) {
+    $getClientInfo = function ($clientId) use ($config) {
+        if (!isset($config->clientList)) {
             return false;
         }
-        if (!array_key_exists($clientId, $configData['clientList'])) {
+        if (!isset($config->clientList->$clientId)) {
             return false;
         }
 
-        return $configData['clientList'][$clientId];
+        return $config->clientList->$clientId;
     };
 
     // server
@@ -47,7 +48,7 @@ try {
         new DateTime(),
         $getClientInfo
     );
-    $oauthServer->setSignatureKeyPair(base64_decode($configData['signatureKeyPair']));
+    $oauthServer->setSignatureKeyPair(base64_decode($config->signatureKeyPair));
 
     $token = new Token($oauthServer);
     $token->run(new Request($_SERVER, $_GET, $_POST))->send();

@@ -21,6 +21,7 @@ use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Token\Authorize;
+use SURFnet\VPN\Token\Config;
 use SURFnet\VPN\Token\Http\AuthorizeResponse;
 use SURFnet\VPN\Token\Http\Request;
 use SURFnet\VPN\Token\Template;
@@ -28,19 +29,19 @@ use SURFnet\VPN\Token\Template;
 $tpl = new Template(sprintf('%s/templates', dirname(__DIR__)));
 
 try {
-    $configData = require sprintf('%s/config/config.php', dirname(__DIR__));
+    $config = new Config(require sprintf('%s/config/config.php', dirname(__DIR__)));
     $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
 
     // client "database"
-    $getClientInfo = function ($clientId) use ($configData) {
-        if (!array_key_exists('clientList', $configData)) {
+    $getClientInfo = function ($clientId) use ($config) {
+        if (!isset($config->clientList)) {
             return false;
         }
-        if (!array_key_exists($clientId, $configData['clientList'])) {
+        if (!isset($config->clientList->$clientId)) {
             return false;
         }
 
-        return $configData['clientList'][$clientId];
+        return $config->clientList->$clientId;
     };
 
     // server
@@ -50,17 +51,17 @@ try {
         new DateTime(),
         $getClientInfo
     );
-    $oauthServer->setSignatureKeyPair(base64_decode($configData['signatureKeyPair']));
+    $oauthServer->setSignatureKeyPair(base64_decode($config->signatureKeyPair));
 
-    if (!array_key_exists('userIdAttribute', $configData)) {
+    if (!isset($config->userIdAttribute)) {
         throw new RuntimeException('"userIdAttribute" not set in configuration file');
     }
 
-    if (!array_key_exists($configData['userIdAttribute'], $_SERVER)) {
+    if (!array_key_exists($config->userIdAttribute, $_SERVER)) {
         throw new RuntimeException('"userIdAttribute" not available as a server variable');
     }
 
-    $userId = $_SERVER[$configData['userIdAttribute']];
+    $userId = $_SERVER[$config->userIdAttribute];
 
     $authorize = new Authorize($oauthServer, $tpl);
     $authorize->run(new Request($_SERVER, $_GET, $_POST), $userId)->send();
