@@ -49,6 +49,7 @@ try {
         $getClientInfo
     );
     $oauthServer->setSignatureKeyPair(base64_decode($config->signatureKeyPair));
+    $oauthServer->setExpiresIn(24 * 3600); // 1 day validity
 
     $token = new Token($oauthServer);
     $token->run(new Request($_SERVER, $_GET, $_POST))->send();

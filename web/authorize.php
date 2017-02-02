@@ -61,6 +61,7 @@ try {
         $getClientInfo
     );
     $oauthServer->setSignatureKeyPair(base64_decode($config->signatureKeyPair));
+    $oauthServer->setExpiresIn(24 * 3600); // 1 day token validity
 
     if (!isset($config->userIdAttribute)) {
         throw new RuntimeException('"userIdAttribute" not set in configuration file');
