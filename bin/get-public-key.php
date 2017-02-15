@@ -16,7 +16,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-$config = require sprintf('%s/config/config.php', dirname(__DIR__));
+$configData = require sprintf('%s/config/config.php', dirname(__DIR__));
+$keyPair = $configData['keyPair'];
+$publicKey = base64_encode(
+    \Sodium\crypto_sign_publickey(
+        base64_decode($keyPair)
+    )
+);
 
-$signatureKeyPair = $config['signatureKeyPair'];
-echo base64_encode(\Sodium\crypto_sign_publickey(base64_decode($signatureKeyPair))).PHP_EOL;
+echo $publicKey.PHP_EOL;

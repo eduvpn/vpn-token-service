@@ -18,7 +18,22 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Storage;
 
-$tokenStorage = new TokenStorage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
-$tokenStorage->init();
+try {
+    // initialize the DB
+    $storage = new Storage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
+    $storage->init();
+
+    // set the OAuth keypair
+    $configFile = sprintf('%s/config/config.php', dirname(__DIR__));
+    $configData = require $configFile;
+    $configData['keyPair'] = base64_encode(\Sodium\crypto_sign_keypair());
+    $fileContent = sprintf('<?php return %s;', var_export($configData, true));
+    if (false === @file_put_contents($configFile, $fileContent)) {
+        throw new RuntimeException(sprintf('unable to write "%s"', $configFile));
+    }
+} catch (Exception $e) {
+    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    exit(1);
+}

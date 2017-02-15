@@ -9,7 +9,7 @@ return [
 
     // the signature keypair used for signing access tokens, generate your own
     // with vpn-token-service-generate-keypair (or php bin/generate-keypair.php)
-    'signatureKeyPair' => '',
+    'keyPair' => '__REPLACE_ME__',
 
     // list of all OAuth clients registered to obtain access tokens
     'clientList' => [
