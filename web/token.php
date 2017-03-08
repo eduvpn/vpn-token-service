@@ -19,7 +19,6 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
-use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Token\Config;
 use SURFnet\VPN\Token\Http\Request;
 use SURFnet\VPN\Token\Http\TokenResponse;
@@ -28,6 +27,7 @@ use SURFnet\VPN\Token\Token;
 try {
     $config = new Config(require sprintf('%s/config/config.php', dirname(__DIR__)));
     $storage = new Storage(new PDO(sprintf('sqlite:%s/data/db.sqlite', dirname(__DIR__))));
+    $storage->init();
 
     // client "database"
     $getClientInfo = function ($clientId) use ($config) {
@@ -44,7 +44,7 @@ try {
     // server
     $oauthServer = new OAuthServer(
         $getClientInfo,
-        Base64::decode($config->keyPair),
+        $config->keyPair,
         $storage
     );
     $oauthServer->setExpiresIn(24 * 3600); // 1 day validity
